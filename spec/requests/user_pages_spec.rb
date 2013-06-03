@@ -50,6 +50,22 @@ describe "UserPages" do
     end
   end
 
+  describe "when signed-in user" do
+    before { sign_in FactoryGirl.create(:user) }
+
+    describe "accessign Sign up page" do
+      before { visit signup_path }
+
+      it { should_not have_selector('text', text: full_title('Sign up')) }
+    end
+
+    describe "accessign User#create action" do
+      before { post(users_path) }
+
+      specify { response.should redirect_to(root_path) }
+    end
+  end
+
   describe "Signup page" do
     before { visit signup_path }
 
@@ -88,7 +104,7 @@ describe "UserPages" do
         fill_in "Name",         with: "Example User"
         fill_in "Email",        with: "user@example.com"
         fill_in "Password",     with: "foobar"
-        fill_in "Password confirmation", with: "foobar"
+        fill_in "Confirm Password", with: "foobar"
       end
 
       it "should create a user" do
@@ -132,7 +148,7 @@ describe "UserPages" do
         fill_in 'Name',       with: new_name
         fill_in 'Email',      with: new_email
         fill_in 'Password',   with: user.password
-        fill_in 'Password confirmation',  with: user.password_confirmation
+        fill_in 'Confirm Password',  with: user.password_confirmation
         click_button 'Save changes'
       end
 
